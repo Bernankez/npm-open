@@ -24,4 +24,4 @@ npm-open --cwd <path to project>
 
 ## License
 
-[MIT](LICENSE) License © [科科Cole](https://github.com/Bernankez)
+[MIT](LICENSE) License © 2024-PRESENT [科科Cole](https://github.com/Bernankez)
