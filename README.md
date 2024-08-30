@@ -1,5 +1,8 @@
 # npm-open
 
+[![npm](https://img.shields.io/npm/v/@bernankez/npm-open?color=red&label=npm)](https://www.npmjs.com/package/@bernankez/npm-open)
+[![CI](https://github.com/Bernankez/npm-open/workflows/CI/badge.svg)](https://github.com/Bernankez/npm-open/actions)
+
 Type `npm-open` to open the npm package homepage in the browser. Similar to `git-open`.
 
 ## Install
