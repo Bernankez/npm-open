@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "packageManager": "pnpm@9.9.0",
-  "description": "Open npm homepage with `npm-open`, similar to `git-open`",
+  "description": "Open npm package homepage with `npm-open`, similar to `git-open`",
   "author": {
     "name": "Cole",
     "email": "bernankeic@gmail.com",
