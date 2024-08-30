@@ -16,7 +16,7 @@
     "url": "git+https://github.com/Bernankez/npm-open.git"
   },
   "bugs": "https://github.com/Bernankez/npm-open/issues",
-  "keywords": [],
+  "keywords": ["npm", "cli"],
   "sideEffects": false,
   "typesVersions": {
     "*": {
