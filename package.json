@@ -1,7 +1,7 @@
 {
   "name": "@bernankez/npm-open",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "packageManager": "pnpm@9.9.0",
   "description": "Open npm package homepage with `npm-open`, similar to `git-open`",
   "author": {
