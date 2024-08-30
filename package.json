@@ -1,0 +1,78 @@
+{
+  "name": "@bernankez/npm-open",
+  "type": "module",
+  "version": "0.0.0",
+  "packageManager": "pnpm@9.9.0",
+  "description": "Open npm homepage with `npm-open`, similar to `git-open`",
+  "author": {
+    "name": "Cole",
+    "email": "bernankeic@gmail.com",
+    "url": "https://github.com/Bernankez"
+  },
+  "homepage": "https://github.com/Bernankez/npm-open#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bernankez/npm-open.git"
+  },
+  "bugs": "https://github.com/Bernankez/npm-open/issues",
+  "keywords": [],
+  "sideEffects": false,
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./dist/index.d.ts"
+      ]
+    }
+  },
+  "bin": {
+    "npm-open": "./bin/index.js"
+  },
+  "files": [
+    "bin",
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup --format esm,cjs --clean --dts",
+    "dev": "tsup --format esm,cjs --watch",
+    "fix": "eslint . -f mo --fix",
+    "lint": "eslint . -f mo",
+    "prepack": "nr build",
+    "prepare": "simple-git-hooks",
+    "preview": "node --watch bin/index.js",
+    "release": "bumpp && npm publish",
+    "test": "vitest",
+    "test:once": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "cac": "^6.7.14",
+    "open": "^10.1.0"
+  },
+  "devDependencies": {
+    "@antfu/ni": "^0.23.0",
+    "@bernankez/eslint-config": "^2.0.0",
+    "@bernankez/utils": "^0.6.4",
+    "@types/node": "^22.5.1",
+    "bumpp": "^9.5.2",
+    "eslint": "^9.9.1",
+    "eslint-formatter-mo": "^1.2.0",
+    "lint-staged": "^15.2.9",
+    "rimraf": "^6.0.1",
+    "simple-git-hooks": "^2.11.1",
+    "tsup": "^8.2.4",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.2",
+    "vitest": "^2.0.5"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "nlx lint-staged"
+  },
+  "lint-staged": {
+    "*": "eslint --fix"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
