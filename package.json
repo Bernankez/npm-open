@@ -16,7 +16,10 @@
     "url": "git+https://github.com/Bernankez/npm-open.git"
   },
   "bugs": "https://github.com/Bernankez/npm-open/issues",
-  "keywords": ["npm", "cli"],
+  "keywords": [
+    "npm",
+    "cli"
+  ],
   "sideEffects": false,
   "typesVersions": {
     "*": {
@@ -63,6 +66,7 @@
     "simple-git-hooks": "^2.11.1",
     "tsup": "^8.2.4",
     "tsx": "^4.19.0",
+    "type-fest": "^4.26.0",
     "typescript": "^5.5.4",
     "vite": "^5.4.2",
     "vitest": "^2.0.5"

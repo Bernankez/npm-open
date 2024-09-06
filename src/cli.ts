@@ -1,32 +1,43 @@
 import process from "node:process";
-import path from "node:path";
-import fs from "node:fs";
 import { cac } from "cac";
 import open from "open";
 import { log } from "@bernankez/utils";
 import { version } from "../package.json";
+import { getPackageJson, resolvePackage } from "./package";
 
-function loadArgs(argv = process.argv) {
+function loadArgs(argv = process.argv): {
+  [k: string]: any;
+} {
   const cli = cac("npm-open");
-  cli.version(version).usage("[options]").option("--cwd", "Root directory to search for package.json").help();
+  cli.version(version).usage("[options]")
+    .option("-n --npm", "Open npm package page regardless of current registry")
+    .option("--cwd", "Root directory to search for package.json").help();
   const result = cli.parse(argv);
   return result.options;
 }
 
-function main() {
+async function main(): Promise<void> {
   const args = loadArgs();
   if (args.help || args.version) {
     process.exit(0);
   }
-  const cwd = args.cwd || process.cwd();
-  const packageJsonPath = path.resolve(cwd, "package.json");
-  if (!fs.existsSync(packageJsonPath)) {
-    log.error(`${packageJsonPath} not found`);
+  const cwd = args.cwd;
+  const packageJson = getPackageJson(cwd);
+  if (!packageJson) {
     process.exit(1);
   }
-  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
   const packageName = packageJson.name;
-  const url = `https://www.npmjs.com/package/${packageName}`;
+  if (!packageName) {
+    log.error(`package.json does not contain a name`);
+    process.exit(1);
+  }
+  const isPrivate = packageJson.private;
+  if (isPrivate) {
+    log.error(`${packageName} is private. Will not open package page`);
+    process.exit(0);
+  }
+  const pkg = await resolvePackage(packageName, { npm: args.npm || args.n });
+  const url = pkg.website ?? pkg.registry;
   open(url);
 }
 
