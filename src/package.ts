@@ -1,6 +1,6 @@
-import process from "node:process";
-import path from "node:path";
 import fs from "node:fs";
+import path from "node:path";
+import process from "node:process";
 import { log } from "@bernankez/utils";
 import type { PackageJson } from "type-fest";
 import { resolveRegistry } from "./registry";
@@ -23,6 +23,7 @@ export const registryPreset: Record<string, RegistryPresetValue> = {
 
 export interface ResolvePackageOptions {
   npm?: boolean;
+  registry?: Record<string, RegistryPresetValue>;
 }
 export interface ResolvePackageReturn {
   registry: string;
@@ -30,7 +31,7 @@ export interface ResolvePackageReturn {
 }
 
 export async function resolvePackage(pkg: string, options?: ResolvePackageOptions): Promise<ResolvePackageReturn> {
-  const { npm } = options || {};
+  const { npm, registry } = options || {};
   if (npm) {
     const registry = "https://registry.npmjs.org/";
     return {
@@ -42,8 +43,9 @@ export async function resolvePackage(pkg: string, options?: ResolvePackageOption
   const resolved: ResolvePackageReturn = {
     registry: currentRegistry,
   };
-  if (registryPreset[currentRegistry]) {
-    resolved.website = registryPreset[currentRegistry].website(pkg);
+  const mergedRegistry = { ...registryPreset, ...registry };
+  if (mergedRegistry[currentRegistry]) {
+    resolved.website = mergedRegistry[currentRegistry].website(pkg);
   }
   return resolved;
 }

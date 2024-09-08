@@ -1,29 +1,32 @@
 import process from "node:process";
+import { log } from "@bernankez/utils";
 import { cac } from "cac";
 import open from "open";
-import { log } from "@bernankez/utils";
 import { version } from "../package.json";
+import { loadConfig, type NpmOpenConfigWithCwd } from "./config";
 import { getPackageJson, resolvePackage } from "./package";
 
-function loadArgs(argv = process.argv): {
-  [k: string]: any;
-} {
+function loadArgs(argv = process.argv): NpmOpenConfigWithCwd {
   const cli = cac("npm-open");
-  cli.version(version).usage("[options]")
-    .option("-n --npm", "Open npm package page regardless of current registry")
-    .option("--cwd", "Root directory to search for package.json").help();
+  cli.version(version).usage("[options]").option("-n --npm", "Open npm package page regardless of current registry").option("--cwd", "Root directory to search for package.json").help();
   const result = cli.parse(argv);
-  return result.options;
+  const options = result.options;
+  if (options.help || options.version) {
+    process.exit(0);
+  }
+  const npm = options.npm || options.n;
+  return {
+    npm,
+    cwd: options.cwd,
+  };
 }
 
 async function main(): Promise<void> {
   const args = loadArgs();
-  if (args.help || args.version) {
-    process.exit(0);
-  }
-  const cwd = args.cwd;
-  const packageJson = getPackageJson(cwd);
+  const config = await loadConfig(args);
+  const packageJson = getPackageJson(config.cwd);
   if (!packageJson) {
+    log.error(`package.json not found in ${config.cwd}`);
     process.exit(1);
   }
   const packageName = packageJson.name;
@@ -36,7 +39,7 @@ async function main(): Promise<void> {
     log.error(`${packageName} is private. Will not open package page`);
     process.exit(0);
   }
-  const pkg = await resolvePackage(packageName, { npm: args.npm || args.n });
+  const pkg = await resolvePackage(packageName, { ...config });
   const url = pkg.website ?? pkg.registry;
   open(url);
 }

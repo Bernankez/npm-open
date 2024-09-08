@@ -39,6 +39,7 @@
   "scripts": {
     "build": "tsup --format esm,cjs --clean --dts",
     "dev": "tsup --format esm,cjs --watch",
+    "start": "tsx --watch src/index.ts",
     "fix": "eslint . -f mo --fix",
     "lint": "eslint . -f mo",
     "prepack": "nr build",
@@ -50,25 +51,26 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "c12": "^1.11.2",
     "cac": "^6.7.14",
     "open": "^10.1.0"
   },
   "devDependencies": {
     "@antfu/ni": "^0.23.0",
-    "@bernankez/eslint-config": "^2.0.0",
+    "@bernankez/eslint-config": "^2.1.0",
     "@bernankez/utils": "^0.6.4",
-    "@types/node": "^22.5.1",
+    "@types/node": "^22.5.4",
     "bumpp": "^9.5.2",
-    "eslint": "^9.9.1",
+    "eslint": "^9.10.0",
     "eslint-formatter-mo": "^1.2.0",
-    "lint-staged": "^15.2.9",
+    "lint-staged": "^15.2.10",
     "rimraf": "^6.0.1",
     "simple-git-hooks": "^2.11.1",
     "tsup": "^8.2.4",
     "tsx": "^4.19.0",
-    "type-fest": "^4.26.0",
+    "type-fest": "^4.26.1",
     "typescript": "^5.5.4",
-    "vite": "^5.4.2",
+    "vite": "^5.4.3",
     "vitest": "^2.0.5"
   },
   "simple-git-hooks": {
