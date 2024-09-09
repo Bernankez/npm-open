@@ -44,9 +44,11 @@ export async function resolvePackage(pkgName: string, options?: ResolvePackageOp
   const registry = [...registryPreset, ...customRegistry];
   if (npm) {
     const npmRegistry = registry.find(r => r.name === "npm")!;
+    const url = npmRegistry.url + pkgName;
     const website = npmRegistry.website(pkgName);
     return {
       ...npmRegistry,
+      url,
       website,
     };
   }
@@ -58,7 +60,7 @@ export async function resolvePackage(pkgName: string, options?: ResolvePackageOp
   }
   return {
     ...current,
-    url,
+    url: url + pkgName,
     website,
   };
 }
