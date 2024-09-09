@@ -2,8 +2,12 @@
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["ESNext"],
+    "baseUrl": ".",
     "module": "ESNext",
     "moduleResolution": "Node",
+    "paths": {
+      "@bernankez/npm-open": ["src"]
+    },
     "resolveJsonModule": true,
     "strict": true,
     "strictNullChecks": true,
