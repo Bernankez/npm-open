@@ -3,10 +3,10 @@ import { log } from "@bernankez/utils";
 import { cac } from "cac";
 import open from "open";
 import { version } from "../package.json";
-import { loadConfig, type NpmOpenConfigWithCwd } from "./config";
+import { loadConfig } from "./config";
 import { getPackageJson, resolvePackage } from "./package";
 
-function loadArgs(argv = process.argv): NpmOpenConfigWithCwd {
+function loadArgs(argv = process.argv): { npm: boolean; cwd: string } {
   const cli = cac("npm-open");
   cli.version(version).usage("[options]").option("-n --npm", "Open npm package page regardless of current registry").option("--cwd", "Root directory to search for package.json").help();
   const result = cli.parse(argv);
@@ -17,13 +17,14 @@ function loadArgs(argv = process.argv): NpmOpenConfigWithCwd {
   const npm = options.npm || options.n;
   return {
     npm,
-    cwd: options.cwd,
+    cwd: options.cwd || process.cwd(),
   };
 }
 
 async function main(): Promise<void> {
   const args = loadArgs();
-  const config = await loadConfig(args);
+  const configFile = await loadConfig(process.cwd());
+  const config = { ...configFile, ...args };
   const packageJson = getPackageJson(config.cwd);
   if (!packageJson) {
     log.error(`package.json not found in ${config.cwd}`);
@@ -40,7 +41,7 @@ async function main(): Promise<void> {
     process.exit(0);
   }
   const pkg = await resolvePackage(packageName, { ...config });
-  const url = pkg.website ?? pkg.registry;
+  const url = pkg.website ?? pkg.url;
   open(url);
 }
 

@@ -1,34 +1,23 @@
-import process from "node:process";
 import { loadConfig as _loadConfig } from "c12";
-import type { RegistryPresetValue } from "./package";
+import type { Registry } from "./package";
 
 export interface NpmOpenConfig {
   npm?: boolean;
-  registry?: Record<string, RegistryPresetValue>;
-}
-
-export interface NpmOpenConfigWithCwd extends NpmOpenConfig {
-  // Root for package.json
-  cwd?: string;
+  registry?: Registry[];
 }
 
 const defaultConfig: NpmOpenConfig = {
   npm: false,
 };
 
-export async function loadConfig(configFromArgs?: NpmOpenConfigWithCwd): Promise<NpmOpenConfigWithCwd> {
-  const { cwd, ...argsConfig } = configFromArgs || {};
+export async function loadConfig(cwd = "."): Promise<NpmOpenConfig> {
   const { config } = await _loadConfig({
     name: "npmopen",
-    cwd: process.cwd(),
+    cwd,
     rcFile: false,
     defaultConfig,
-    overrides: argsConfig,
   });
-  return {
-    ...config,
-    cwd: cwd || process.cwd(),
-  };
+  return config;
 }
 
 export function defineConfig(config: NpmOpenConfig): NpmOpenConfig {

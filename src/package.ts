@@ -5,49 +5,62 @@ import { log } from "@bernankez/utils";
 import type { PackageJson } from "type-fest";
 import { resolveRegistry } from "./registry";
 
-export interface RegistryPresetValue {
-  website: (pkg: string) => string;
+export interface Registry {
+  name?: string;
+  url: string;
+  website: (pkgName: string) => string;
 }
 
-export const registryPreset: Record<string, RegistryPresetValue> = {
-  "https://registry.npmjs.org/": {
+export const registryPreset = [
+  {
+    name: "npm",
+    url: "https://registry.npmjs.org/",
     website: pkg => `https://www.npmjs.com/package/${pkg}`,
   },
-  "https://registry.npmmirror.com/": {
+  {
+    name: "taobao",
+    url: "https://registry.npmmirror.com/",
     website: pkg => `https://npmmirror.com/package/${pkg}`,
   },
-  "https://r.cnpmjs.org/": {
+  {
+    name: "cnpm",
+    url: "https://r.cnpmjs.org/",
     website: pkg => `https://npmmirror.com/package/${pkg}`,
   },
-};
+] satisfies Registry[];
 
 export interface ResolvePackageOptions {
   npm?: boolean;
-  registry?: Record<string, RegistryPresetValue>;
+  customRegistry?: Registry[];
 }
 export interface ResolvePackageReturn {
-  registry: string;
+  name?: string;
+  url: string;
   website?: string;
 }
 
-export async function resolvePackage(pkg: string, options?: ResolvePackageOptions): Promise<ResolvePackageReturn> {
-  const { npm, registry } = options || {};
+export async function resolvePackage(pkgName: string, options?: ResolvePackageOptions): Promise<ResolvePackageReturn> {
+  const { npm, customRegistry = [] } = options || {};
+  const registry = [...registryPreset, ...customRegistry];
   if (npm) {
-    const registry = "https://registry.npmjs.org/";
+    const npmRegistry = registry.find(r => r.name === "npm")!;
+    const website = npmRegistry.website(pkgName);
     return {
-      registry,
-      website: registryPreset[registry].website(pkg),
+      ...npmRegistry,
+      website,
     };
   }
-  const currentRegistry = await resolveRegistry();
-  const resolved: ResolvePackageReturn = {
-    registry: currentRegistry,
-  };
-  const mergedRegistry = { ...registryPreset, ...registry };
-  if (mergedRegistry[currentRegistry]) {
-    resolved.website = mergedRegistry[currentRegistry].website(pkg);
+  const url = await resolveRegistry();
+  const current = registry.find(r => r.url === url);
+  let website: string | undefined;
+  if (current) {
+    website = current.website(pkgName);
   }
-  return resolved;
+  return {
+    ...current,
+    url,
+    website,
+  };
 }
 
 export function getPackageJson(cwd = process.cwd()): PackageJson | undefined {
