@@ -25,7 +25,7 @@ You can also specify the root directory using the `--cwd` flag:
 npm-open --cwd <path to project>
 ```
 
-By default, it opens page with your current npm registry. If you want to open the npm package page, using the `-n` or `--npm`:
+By default, it opens page with your current npm registry. If you want to open the npm official package page, using the `-n` or `--npm`:
 
 ```sh
 npm-open -n
